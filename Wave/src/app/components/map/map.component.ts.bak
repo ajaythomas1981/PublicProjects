@@ -1,0 +1,241 @@
+/// <reference types="@types/googlemaps" />
+import { Component } from '@angular/core';
+// import { LocationsService } from '../../services/locations/locations.service';
+import { ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
+import {AfterViewInit } from '@angular/core';
+// import {MarkerClusterer} from "@google/markerclustererplus";
+import MarkerClusterer from '@google/markerclusterer';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+@Injectable()
+export class ConfigService {
+  constructor(private http: HttpClient) { }
+}
+@NgModule({
+  imports: [
+    BrowserModule,
+    // import HttpClientModule after BrowserModule.
+    HttpClientModule,
+  ],
+  declarations: [
+    MapsComponent,
+  ],
+  bootstrap: [ Component ]
+})
+@Component({
+
+  selector: 'app-maps',
+
+  templateUrl: './maps.component.html',
+
+})
+
+export class MapsComponent implements AfterViewInit {
+  @ViewChild('gmap') gmapElement: any;
+  locations: Array<any>;
+  // locationsService:LocationsService;
+  iconUrl: google.maps.Icon;
+ map: google.maps.Map;
+  markers: Array<any>;
+  mc: MarkerClusterer<any>;
+  directionsService: google.maps.DirectionsService;
+  infoWindow: google.maps.InfoWindow;
+  directionsDisplay: google.maps.DirectionsRenderer;
+  mapOptions: any;
+  canZoom: boolean;
+  currentZoom: number;
+  startPos: any;
+  MY_MAPTYPE_ID: string;
+  mainPath: any;
+  altPath: any;
+  marker: google.maps.Marker;
+
+  constructor() {
+   // this.locationsService = locationsService;
+    this.markers = [];
+    this.canZoom = true;
+    this.currentZoom = 14;
+    this.MY_MAPTYPE_ID = 'custom_style';
+    this.directionsService = new google.maps.DirectionsService();
+    this.infoWindow = new google.maps.InfoWindow;
+    this.directionsDisplay = new google.maps.DirectionsRenderer(
+
+    {
+      polylineOptions:
+      {
+        strokeColor : '#FFFFFF'
+      }
+
+    });
+
+    this.mapOptions = {
+      zoomControl: this.canZoom,
+      panControl: false,
+      mapTypeControl: false,
+      scaleControl: false,
+      streetViewControl: false,
+      overviewMapControl: false,
+      zoom: this.currentZoom,
+      zoomControlOptions: {
+          position: google.maps.ControlPosition.TOP_LEFT
+      },
+
+      center: this.startPos,
+      mapTypeControlOptions: {
+      mapTypeIds: [google.maps.MapTypeId.ROADMAP, this.MY_MAPTYPE_ID]
+
+      },
+
+      mapTypeId: this.MY_MAPTYPE_ID
+
+    };
+
+   }
+
+
+  ngAfterViewInit() {
+
+    this.initMap();
+
+  }
+
+
+  initMap = () => {
+
+    // var MarkerClusterer = require('node-js-marker-clusterer');
+
+
+    var mapProp = {
+      center: new google.maps.LatLng(37.090240, -95.712891),
+      zoom: 10,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+
+    };
+    this.map = new google.maps.Map(this.gmapElement.nativeElement, mapProp);
+
+
+    var locations = [
+      {lat: 25.761681, lng: -80.191788},
+      {lat: 24.761681, lng: -81.191788},
+      {lat: 40.712776, lng: -74.005974},
+      {lat: 39.712776, lng: -73.005974},
+      {lat: 41.878113, lng: -87.629799},
+      {lat: 40.878113, lng: -86.629799},
+      {lat: 39.878113, lng: -86.429799},
+      {lat: 47.606209, lng: -122.332069},
+      {lat: 47.306209, lng: -122.000000},
+      {lat: 46.606209, lng: -121.332069},
+      {lat: 37.774929, lng: -122.419418},
+      {lat: 37.774929, lng: -123.419418},
+      {lat: 37.443188, lng: -95.582733},
+      {lat: 36.774929, lng: -122.419418},
+      {lat: 37.775929, lng: -122.319418},
+      {lat: 36.443188, lng: -95.582733},
+      {lat: 39.739235, lng: -104.990250},
+      {lat: 39.739235, lng: -103.990250},
+      {lat: 30.267153, lng: -97.743057},
+      {lat: 30.267153, lng: -96.743057},
+      {lat: 29.267153, lng: -97.743057},
+      {lat: 31.267153, lng: -97.743057},
+      {lat: 32.267153, lng: -97.743057},
+      {lat: 33.748997, lng: -83.387985},
+      {lat: 33.748997, lng: -84.387985}
+    ];
+/*
+    $.ajax({
+      method: "POST",
+      headers: {
+          'USER_ID' : userID,
+          'FIRST_NAME' : firstName,
+          'LAST_NAME' : lastName,
+          "Authorization": window.encodedAuthHeader
+      },
+  url :  "http://localhost:9010/equipment/search/v2",,
+      data: JSON.stringify(jsonQuery),
+      Accept:'application/json',
+      contentType:'application/json; charset=UTF-8',
+      dataType : 'json',
+      cache: false,
+  success: function(data) {
+
+*/
+   
+var Latlng = function(position) {
+  return position.coords.latitude + ',' + position.coords.longitude;
+};
+// Below starts API call psuedocode:
+/*navigator.geolocation.getCurrentPosition(function(position) {
+  $.ajax({
+    url: 'Request URL: https://nautilus-services.ebiz.verizon.com/instance-equipment-search/equipment/search/v2?page=1&size=250',
+    headers: {
+      'Accept': 'application/json'
+    },
+    data: {
+      radius: 10,
+      latlng: Latlng(position)
+    },
+    success: function(storesData) {
+      console.log(storesData);
+    }
+  });
+}, function(error) {
+  console.log(error);
+
+    
+});*/
+
+
+
+    var map = new google.maps.Map(document.getElementById('gmap'), {
+      zoom: 4,
+      center: new google.maps.LatLng(30.2979536, -97.7470835),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+
+    });
+
+   
+
+ 
+
+    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var markers = locations.map(function(location:any, i:any) {
+      return new google.maps.Marker({
+        position: location,
+        label: labels[i % labels.length],
+
+      });
+
+    });
+
+
+    var options = {
+      gridSize: 100,
+      maxZoom: 12,
+      zoomOnClick: true,
+      imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m"
+    };
+    var mc =  new MarkerClusterer(map, markers, options);
+
+    var latlngs = Array();
+
+    //Get latlng from first clicked marker
+   // latlngs.push(marker1.getLatLng());
+    //get latlng from second clicked marker
+    //latlngs.push(marker2.getLatLng());
+
+    var polyline = new google.maps.Polyline({
+      map: map,
+      path: latlngs,
+      strokeOpacity: 0.4
+    });
+
+
+  }
+
+  }
+
+ 

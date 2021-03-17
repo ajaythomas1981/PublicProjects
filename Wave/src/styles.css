@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body 
+{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.mainHeader
+{
+    width:100%;
+    background-color:#9a9a9a;
+    color:white;
+    height:80px;
+}
+
+.mainFooter
+{
+    width:100%;
+    background-color:#9a9a9a;
+    color:white;
+    height:80px;
+}
+
+.mainMap {
+    height: calc(100vh - 160px);
+  }
